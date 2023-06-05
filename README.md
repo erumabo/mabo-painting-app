@@ -18,15 +18,16 @@ tailored to my needs.
 ### Next-up
 
 - Separate code in modules
-- Rework UI
-- Color picker with alpha
+- Add dialog to create a new project, set canvas size
 - Ability to rearange the layers
 
 
 ### Latter
 
 - Pencils and patterns
-- 
+- Rework UI
+- Autoscale canvas to screen, and center it
+- Color picker with alpha
 
 
 ### Way latter down the road
@@ -34,4 +35,3 @@ tailored to my needs.
 - Select, copy, cut and paste
 - Move layers independently
 - Layers of diff size
-- 
