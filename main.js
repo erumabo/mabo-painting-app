@@ -1,15 +1,13 @@
-/*if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/src/sw.js");
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./src/sw.js");
   console.log("service worker yes")
 } else {
   console.log("no service worker")
 }
-*/
 
-import '/libs/jszip.js';
-import { Pan, TwoFingerPan, Pinch, PointerListener } from '/libs/contact.js';
-import { Layer } from '/src/layer.js';
-//import { BSON, EJSON } from '/libs/bson.js';
+import './libs/jszip.min.js';
+import { Pan, TwoFingerPan, Pinch, PointerListener } from './libs/contact.js';
+import { Layer } from './src/layer.js';
 
 //=================================================
 

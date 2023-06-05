@@ -1,13 +1,15 @@
 const cacheName = "painter-v1";
 const contentToCache = [
-  "/index.html",
-  "/manifest.json",
-  "/icons/icon.png",
-  "/style.css",
-  "/main.js",
-  "/src/sw.js",
-  "/components/layerControl/layerControl.js",
-  "/libs/interact.min.js",
+  "index.html",
+  "manifest.json",
+  "icons/icon.png",
+  "style.css",
+  "main.js",
+  "./src/sw.js",
+  "./src/layer.js",
+  "./components/layerControl/layerControl.js",
+  "./libs/jszip.min.js",
+  "./libs/contact.js",
   ];
 
 console.log(contentToCache);
