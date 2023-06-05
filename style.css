@@ -1,0 +1,125 @@
+/** Global styles **/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+menu {
+  list-style: none;
+}
+
+details {
+  position: relative;
+}
+summary>* {
+  display: inline;
+}
+
+/** Layout **/
+
+#mainLayout {
+  display: grid;
+  grid-template-columns: 0 1fr;
+  grid-template-rows: 2em 1fr;
+  grid-template-areas:
+    "top top"
+    "side canvas";
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#topMenu {
+  grid-area: top;
+}
+
+#mainContainer {
+  grid-area: canvas;
+}
+
+#layersMenu {
+  grid-area: side;
+}
+
+
+/** Top Controls Styling **/
+#topMenu {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#topMenu details > summary {
+  line-height: 1.5;
+  background: lightcyan;
+  padding: 2px;
+}
+
+#topMenu details > div {
+  background: whitesmoke;
+  border: 1px solid lightgray;
+  padding: 4px;
+  position: absolute;
+  z-index: 500;
+}
+
+  #topMenu details[open] > div {
+    margin-top: 5px;
+  }
+
+/** Canvas Styling **/
+
+#canvas {
+  position: relative;
+  border: 1px solid black;
+  background-color: #fcfcfb;
+  opacity: 1;
+  background-image: radial-gradient( ellipse farthest-corner at 10px 10px , #F9F8F4, #F9F8F4 50%, #fcfcfb 50%);
+  background-size: 10px 10px;
+  width: 100%;
+  height: 100%
+}
+
+  #canvas, #canvas canvas {
+    user-select: none;
+    touch-action: none;
+  }
+  
+  #canvas canvas {
+    position: absolute;
+    top:0;
+    left:0;
+  }
+
+/** side menu **/
+
+#layersMenu {
+  position: relative;
+  padding: 0px;
+}
+
+#layersMenu > details{
+  position: absolute;
+  top:0;
+  left:0;
+  padding: 5px;
+}
+
+#layersMenu > details > summary {
+  list-style: none;
+}
+
+#layersMenu > details > menu {
+  background: aliceblue;
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
+#layersMenu > details[open] > menu {
+  padding: 5px;
+}
+
+
+/** Hidden stuff for dom manip **/
+#hidden {
+  display: none;
+}

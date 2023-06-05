@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Painter</title>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json" />
+</head>
+
+<body>
+  <div id="mainLayout">
+
+    <menu id="topMenu">
+            
+      <li>
+        <details>
+          <summary>File</summary>
+          <div>
+            <menu id="fileMenu">
+              <li>
+                <input type="file" id="openFile" style="display: none" accept=".zip" />
+                <button id="openButton">Open</button>
+              </li>
+              <li>
+                <button id="saveButton">Save</button>
+              </li>
+              <li>
+                <button id="exportButton">Export&nbsp;as&nbsp;PNG</button>
+              </li>
+            </menu>
+          </div>
+        </details>
+      </li>
+      
+      <li>
+        <details>
+          <summary>Controls</summary>
+          <div>
+            <menu id="controlsMenu">
+              <li>
+                <label for="inputColorPicker">Pencil Color</label>
+                <input type="color" id="inputColorPicker" value="#000000" />
+              </li>
+              <li>
+                <label for="inputPencilSize">Pencil Size</label>
+                <input type="range" id="inputPencilSize" min="2" value="10" max="50" />
+              </li>
+              <li>
+                <button id="buttonEraser">Borrador</button>
+              </li>
+            </menu>
+          </div>
+        </details>
+      </li>
+      
+    </menu>
+
+    <main id="mainContainer">
+      <div id="canvas"></div>
+    </main>
+
+    <aside id="layersMenu">
+      <details>
+        <summary>|||</summary>
+        <menu id="layerMenu">
+          <li>
+            <button id="newLayerButton" class="menuButton">Add +</button>
+          </li>
+        </menu>
+      </details>
+    </aside>
+
+  </div>
+  
+  <div id="hidden"></div>
+
+  <template id="layerControl">
+    <style>
+      fieldset {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1.25em;
+        grid-template-areas:
+          "image image"
+          "select toggle";
+        column-gap: 2px;
+        row-gap: 2px;
+        padding: 4px;
+        min-height: 50px;
+      }
+      img {
+        grid-area: image;
+        border: 1px solid gray;
+      }
+      .layerSelectButton {
+        grid-area: select;
+      }
+      .layerToggleButton {
+        grid-area: toggle;
+      }
+    </style>
+      <fieldset class="layerOptions">
+        <legend class="layerLegend"></legend>
+        <img width="64" height="64" alt=""/>
+        <button class="layerSelectButton">View</button>
+        <button class="layerToggleButton">Delete</button>
+        <select></select>
+      </fieldset>
+
+  </template>
+  <script src="components/layerControl/layerControl.js"></script>
+  
+  <!-- <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script> -->
+  <script type="module" src="main.js"></script>
+</body>
+
+</html>
