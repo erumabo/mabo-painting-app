@@ -1,25 +1,15 @@
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./src/sw.js");
-  console.log("service worker yes")
-} else {
-  console.log("no service worker")
-}
+if("serviceWorker"in navigator){navigator.serviceWorker.register("./src/sw.js")}
 
 import './libs/jszip.min.js';
+import './components/dropdown-menu.js';
+import './components/layer-control.js';
 import { Pan, TwoFingerPan, Pinch, PointerListener } from './libs/contact.js';
 import { Layer } from './src/layer.js';
+import { Image } from './src/image.js';
 
 //=================================================
 
-let image = {
-  height: 480,
-  width: 480,
-  layers: [],
-  activeLayerIndex: null,
-  lineWidth: 2,
-  strokeStyle: "#000000",
-  globalCompositeOperation: "source-over"
-};
+let image = new Image(480, 480);
 
 let activeLayer = null;
 const canvasWrap = document.getElementById("canvas");
@@ -54,10 +44,12 @@ function addLayer() {
   //layerButton.addEventListener("toggleLayer", () => toggleLayer(index));
   //layerButton.addEventListener("moveLayerUp", () => moveLayerUp(index));
   //layerButton.addEventListener("moveLayerDown", () => moveLayerDown(index));
-
+  
+  let li = document.createElement("li");
+  li.appendChild(layerButton);
   document
     .getElementById("layerMenu")
-    .appendChild(layerButton);
+    .appendChild(li)
 
   let layer = new Layer(image.width, image.height, index, layerButton);
   image.layers.push(layer);
@@ -69,6 +61,10 @@ function addLayer() {
 function activateLayer(l) {
   image.activeLayerIndex = l;
   activeLayer = image.layers[l];
+  setLayerStyle();
+}
+
+function setLayerStyle() {
   let ctx = activeLayer.canvas.getContext("2d");
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
@@ -86,21 +82,19 @@ document.getElementById("inputColorPicker")
   .addEventListener("change", (ev) => {
     image.globalCompositeOperation = "source-over";
     image.strokeStyle = ev.target.value
-    if (!activeLayer) return;
-    activateLayer(image.activeLayerIndex);
+    if (activeLayer) setLayerStyle();
   });
 
 document.getElementById("inputPencilSize")
   .addEventListener("change", (ev) => {
     image.lineWidth = ev.target.value
-    if (!activeLayer) return;
-    activateLayer(image.activeLayerIndex);
+    if (activeLayer) setLayerStyle();
   });
 
 document.getElementById("buttonEraser")
   .addEventListener("click", (ev) => {
     image.globalCompositeOperation = "destination-out";
-    activateLayer(image.activeLayerIndex);
+    if (activeLayer) setLayerStyle();
   })
 //=================================================
 
@@ -115,27 +109,15 @@ document.getElementById("exportButton").addEventListener("click", exportImage);
 //=================================================
 
 async function saveFile() {
-  let layerData = [];
-  let layerBlob = [];
-  for(let layer of image.layers) {
-    let data = await layer.toJSON();
-    layerBlob.push(data.data);
-    layerData.push({
-      ...data,
-      data: data.index + '.png'
-    });
-  }
-  
-  let imageData = {
-    ...image,
-    layers: layerData
-  };
+  let imageData = await image.toJSON();
+  let layerBlob = imageData.blobs;
+  imageData.blobs = undefined;
   
   const fzip = new JSZip();
   fzip.file("image.json", JSON.stringify(imageData));
   const folder = fzip.folder("layers");
-  for(let blob in layerBlob) {
-    folder.file(blob + ".png", layerBlob[blob]);
+  for(let blob of layerBlob) {
+    folder.file(blob.filename, blob.blob);
   }
   
   fzip.generateAsync({type:"blob"})
@@ -184,12 +166,14 @@ async function openFile(file) {
     layer.control.setAttribute("src", snap);
   }
   
-  image = {
-    ...fimage,
-    layers
-  };
+  image = new Image(fimage.width, fimage.height);
+  image.layers = layers;
+  image.activeLayerIndex = fimage.activeLayerIndex;
+  image.lineWidth = fimage.lineWidth;
+  image.strokeStyle = fimage.strokeStyle;
+  image.globalCompositeOperation = fimage.globalCompositeOperation;
   
-  activateLayer(fimage.activeLayerIndex);
+  activateLayer(image.activeLayerIndex);
 }
 
 document.getElementById("openFile").addEventListener("change", (ev) => {

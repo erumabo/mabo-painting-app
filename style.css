@@ -11,19 +11,16 @@ menu {
 details {
   position: relative;
 }
-summary>* {
-  display: inline;
-}
-
 /** Layout **/
 
 #mainLayout {
   display: grid;
-  grid-template-columns: 0 1fr;
-  grid-template-rows: 2em 1fr;
+  grid-template-columns: 1fr;
+  grid-template-rows: 2em 9em 1fr;
   grid-template-areas:
-    "top top"
-    "side canvas";
+    "top"
+    "side"
+    "canvas";
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -47,7 +44,8 @@ summary>* {
   display: flex;
   justify-content: space-evenly;
 }
-
+ 
+/*
 #topMenu details > summary {
   line-height: 1.5;
   background: lightcyan;
@@ -65,7 +63,7 @@ summary>* {
   #topMenu details[open] > div {
     margin-top: 5px;
   }
-
+*/
 /** Canvas Styling **/
 
 #canvas {
@@ -97,6 +95,7 @@ summary>* {
   padding: 0px;
 }
 
+/*
 #layersMenu > details{
   position: absolute;
   top:0;
@@ -117,7 +116,24 @@ summary>* {
 #layersMenu > details[open] > menu {
   padding: 5px;
 }
+*/
 
+#layersMenu {
+  overflow-x: scroll;
+  background: aliceblue;
+}
+
+#layersMenu > menu{
+  overflow-x: scroll;
+  display: flex;
+  flex-direction: row;
+}
+
+#layersMenu li {
+  list-style: none;
+  max-width: 200px;
+  display: inline-block;
+}
 
 /** Hidden stuff for dom manip **/
 #hidden {

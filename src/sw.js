@@ -7,9 +7,14 @@ const contentToCache = [
   "../main.js",
   "./sw.js",
   "./layer.js",
-  "../components/layerControl/layerControl.js",
+  "./image.js",
+  "./editor.js",
+  "../components/layer-control.js",
+  "../components/dropdown-menu.js",
   "../libs/jszip.min.js",
   "../libs/contact.js",
+  "../libs/iro.es.js",
+  "../libs/sortable.esm.js",
   ];
 
 console.log(contentToCache);

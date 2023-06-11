@@ -18,9 +18,7 @@
     <menu id="topMenu">
             
       <li>
-        <details>
-          <summary>File</summary>
-          <div>
+        <dropdown-menu name="File">
             <menu id="fileMenu">
               <li>
                 <input type="file" id="openFile" style="display: none" accept=".zip" />
@@ -33,14 +31,11 @@
                 <button id="exportButton">Export&nbsp;as&nbsp;PNG</button>
               </li>
             </menu>
-          </div>
-        </details>
+        </dropdown-menu>
       </li>
       
       <li>
-        <details>
-          <summary>Controls</summary>
-          <div>
+        <dropdown-menu name="Controls">
             <menu id="controlsMenu">
               <li>
                 <label for="inputColorPicker">Pencil Color</label>
@@ -54,8 +49,7 @@
                 <button id="buttonEraser">Borrador</button>
               </li>
             </menu>
-          </div>
-        </details>
+        </dropdown-menu>
       </li>
       
     </menu>
@@ -65,14 +59,11 @@
     </main>
 
     <aside id="layersMenu">
-      <details>
-        <summary>|||</summary>
         <menu id="layerMenu">
           <li>
             <button id="newLayerButton" class="menuButton">Add +</button>
           </li>
         </menu>
-      </details>
     </aside>
 
   </div>
@@ -111,11 +102,8 @@
         <button class="layerToggleButton">Delete</button>
         <select></select>
       </fieldset>
-
   </template>
-  <script src="components/layerControl/layerControl.js"></script>
   
-  <!-- <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script> -->
   <script type="module" src="main.js"></script>
 </body>
 

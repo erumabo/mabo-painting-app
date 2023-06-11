@@ -17,7 +17,8 @@ export class Layer {
   
   async toJSON() {
     return {
-      data: (await this.canvas.convertToBlob()),
+      data: this.index + ".png",
+      blob: (await this.canvas.convertToBlob()),
       globalCompositeOperation: this.globalCompositeOperation,
       index: this.index
     };
