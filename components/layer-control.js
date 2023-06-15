@@ -5,10 +5,11 @@ class LayerControl extends HTMLElement {
 
   constructor() {
     super();
-    let content = document.getElementById("layerControl").content;
+    //let content = document.getElementById("layerControl").content;
     this
       .attachShadow({ mode: 'open' })
-      .appendChild(content.cloneNode(true));
+      .innerHTML = this.content;
+    //  .appendChild(content.cloneNode(true));
   }
 
   init() {
@@ -58,6 +59,8 @@ class LayerControl extends HTMLElement {
           detail: ev.target.value
         }));
     });
+    
+    shadow.querySelector("fieldset").style["max-height"] = "100px";
   }
   connectedCallback() { setTimeout(() => this.init()) }
 
@@ -75,6 +78,53 @@ class LayerControl extends HTMLElement {
   setThumbnail(src) {
     this.shadowRoot.querySelector("img").src = src;
   }
+  
+  content = `    <style>
+    @import "./material-icons.css";
+      fieldset {
+        display: grid;
+        grid-template-columns: 1fr 40px;
+        grid-template-rows: 1fr 1fr 1.25em;
+        grid-template-areas:
+          "image toggle"
+          "image delete"
+          "select select";
+        column-gap: 2px;
+        row-gap: 2px;
+        padding: 4px;
+        min-height: 50px;
+        overflow: clip;
+        max-height: 0px;
+      }
+      img {
+        grid-area: image;
+        border: 1px solid gray;
+      }
+      .layerDeleteButton {
+        grid-area: delete;
+      }
+      .layerToggleButton {
+        grid-area: toggle;
+      }
+      .selectDropdown {
+        grid-area: select;
+      }
+    </style>
+      <fieldset class="layerOptions">
+        <legend class="layerLegend"></legend>
+        <img width="64" height="64" alt=""/>
+        <button class="layerToggleButton">
+          <span class="material-icons">
+            visibility
+          </span>
+        </button>
+        <button class="layerDeletrButton">
+            <span class="material-icons">
+              delete
+            </span>
+        </button>
+        <select class="selectDropdown"></select>
+      </fieldset>`;
 }
 
 

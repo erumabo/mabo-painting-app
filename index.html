@@ -71,37 +71,7 @@
   <div id="hidden"></div>
 
   <template id="layerControl">
-    <style>
-      fieldset {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1.25em;
-        grid-template-areas:
-          "image image"
-          "select toggle";
-        column-gap: 2px;
-        row-gap: 2px;
-        padding: 4px;
-        min-height: 50px;
-      }
-      img {
-        grid-area: image;
-        border: 1px solid gray;
-      }
-      .layerSelectButton {
-        grid-area: select;
-      }
-      .layerToggleButton {
-        grid-area: toggle;
-      }
-    </style>
-      <fieldset class="layerOptions">
-        <legend class="layerLegend"></legend>
-        <img width="64" height="64" alt=""/>
-        <button class="layerSelectButton">View</button>
-        <button class="layerToggleButton">Delete</button>
-        <select></select>
-      </fieldset>
+
   </template>
   
   <script type="module" src="main.js"></script>

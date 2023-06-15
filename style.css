@@ -8,15 +8,22 @@ menu {
   list-style: none;
 }
 
-details {
-  position: relative;
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(./icons/MaterialIcons-Regular.ttf) format('truetype');
 }
+
+@import "./material-icons.css";
 /** Layout **/
 
 #mainLayout {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 2em 9em 1fr;
+  grid-template-rows: 2em min-content 1fr;
   grid-template-areas:
     "top"
     "side"
