@@ -60,7 +60,7 @@ class LayerControl extends HTMLElement {
         }));
     });
     
-    shadow.querySelector("fieldset").style["max-height"] = "100px";
+    shadow.querySelector("fieldset").style["max-height"] = "fit-content";
   }
   connectedCallback() { setTimeout(() => this.init()) }
 
@@ -79,7 +79,7 @@ class LayerControl extends HTMLElement {
     this.shadowRoot.querySelector("img").src = src;
   }
   
-  content = `    <style>
+  content = `<style>
     @import "./material-icons.css";
       fieldset {
         display: grid;
@@ -92,7 +92,7 @@ class LayerControl extends HTMLElement {
         column-gap: 2px;
         row-gap: 2px;
         padding: 4px;
-        min-height: 50px;
+        min-height: 70px;
         overflow: clip;
         max-height: 0px;
       }

@@ -22,13 +22,13 @@
             <menu id="fileMenu">
               <li>
                 <input type="file" id="openFile" style="display: none" accept=".zip" />
-                <button id="openButton">Open</button>
+                <button id="openButton" class="button primary">Open</button>
               </li>
               <li>
-                <button id="saveButton">Save</button>
+                <button id="saveButton" class="button primary">Save</button>
               </li>
               <li>
-                <button id="exportButton">Export&nbsp;as&nbsp;PNG</button>
+                <button id="exportButton" class="button primary">Export&nbsp;as&nbsp;PNG</button>
               </li>
             </menu>
         </dropdown-menu>
@@ -38,20 +38,25 @@
         <dropdown-menu name="Controls">
             <menu id="controlsMenu">
               <li>
-                <label for="inputColorPicker">Pencil Color</label>
+                <label for="inputColorPicker" class="button primary">Pencil Color</label>
                 <input type="color" id="inputColorPicker" value="#000000" />
               </li>
               <li>
-                <label for="inputPencilSize">Pencil Size</label>
+                <label for="inputPencilSize" class="button primary">Pencil Size</label>
                 <input type="range" id="inputPencilSize" min="2" value="10" max="50" />
               </li>
               <li>
-                <button id="buttonEraser">Borrador</button>
+                <button id="buttonEraser" class="button primary">Borrador</button>
+              </li>
+              <li>
+                <button id="buttonBucket" class="button primary">Bucket Fill</button>
               </li>
             </menu>
         </dropdown-menu>
       </li>
-      
+      <li>
+        <button id="buttonToolbarDialog" class="button primary">Toolbar</button>
+      </li>
     </menu>
 
     <main id="mainContainer">
@@ -59,16 +64,55 @@
     </main>
 
     <aside id="layersMenu">
+      <details>
+        <summary class="button primary">
+          <span class="material-icons">layers</span>Layers
+        </summary>
         <menu id="layerMenu">
           <li>
-            <button id="newLayerButton" class="menuButton">Add +</button>
+            <button id="newLayerButton" class="menuButton primary button">
+              <span class="material-icons">add_box</span>Add
+            </button>
           </li>
         </menu>
+      </details>
     </aside>
 
   </div>
   
-  <div id="hidden"></div>
+  <dialog id="dialogNewImage">
+    <form method="dialog">
+      
+      <button>Close</button>
+    </form>
+  </dialog>
+  
+  
+  <dialog id="dialogToolbar" class="modal">
+    <form method="dialog">
+      <fieldset>
+        <label>
+          <input type="radio" name="toolradio"/>
+          <span class="material-icons">brush</span>
+          Pencil
+        </label>
+        <label>
+          <input type="radio" name="toolradio"/>
+          <span class="material-icons">format_color_fill</span>
+          Bucket
+        </label>
+        <label>
+          <input type="radio" name="toolradio"/>
+          <span class="material-icons">panorama_wide_angle_select</span>
+          Eraser
+        </label>
+      </fieldset>
+      
+      <div id="colorPicker"></div>
+      
+      <button>Close</button>
+    </form>
+  </dialog>
 
   <template id="layerControl">
 

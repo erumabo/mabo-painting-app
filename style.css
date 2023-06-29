@@ -1,9 +1,15 @@
+@import "./material-icons.css";
+@import "./style/theme.css";
+
 /** Global styles **/
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 menu {
   list-style: none;
 }
@@ -17,7 +23,6 @@ menu {
     url(./icons/MaterialIcons-Regular.ttf) format('truetype');
 }
 
-@import "./material-icons.css";
 /** Layout **/
 
 #mainLayout {
@@ -31,6 +36,31 @@ menu {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+}
+
+@media all and (orientation:portrait) {
+
+  /* Style adjustments for portrait mode goes here */
+  #mainLayout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 2em min-content 1fr;
+    grid-template-areas:
+      "top"
+      "side"
+      "canvas";
+  }
+}
+
+@media all and (orientation:landscape) {
+
+  /* Style adjustments for portrait mode goes here */
+  #mainLayout {
+    grid-template-rows: 2em 1fr;
+    grid-template-columns: min-content 1fr;
+    grid-template-areas:
+      "top top"
+      "side canvas";
+  }
 }
 
 #topMenu {
@@ -49,28 +79,12 @@ menu {
 /** Top Controls Styling **/
 #topMenu {
   display: flex;
-  justify-content: space-evenly;
-}
- 
-/*
-#topMenu details > summary {
-  line-height: 1.5;
-  background: lightcyan;
-  padding: 2px;
+  gap: 5px;
+  align-items: center;
+  background: rgb(160, 160, 160);
+  background: linear-gradient(0deg, rgba(160, 160, 160, 1) 0%, rgba(240, 240, 240, 1) 15%, rgba(255, 255, 255, 1) 50%, rgba(240, 240, 240, 1) 85%, rgba(160, 160, 160, 1) 100%);
 }
 
-#topMenu details > div {
-  background: whitesmoke;
-  border: 1px solid lightgray;
-  padding: 4px;
-  position: absolute;
-  z-index: 500;
-}
-
-  #topMenu details[open] > div {
-    margin-top: 5px;
-  }
-*/
 /** Canvas Styling **/
 
 #canvas {
@@ -78,22 +92,23 @@ menu {
   border: 1px solid black;
   background-color: #fcfcfb;
   opacity: 1;
-  background-image: radial-gradient( ellipse farthest-corner at 10px 10px , #F9F8F4, #F9F8F4 50%, #fcfcfb 50%);
+  background-image: radial-gradient(ellipse farthest-corner at 10px 10px, #F9F8F4, #F9F8F4 50%, #fcfcfb 50%);
   background-size: 10px 10px;
   width: 100%;
-  height: 100%
+  height: 100%;
 }
 
-  #canvas, #canvas canvas {
-    user-select: none;
-    touch-action: none;
-  }
-  
-  #canvas canvas {
-    position: absolute;
-    top:0;
-    left:0;
-  }
+#canvas,
+#canvas canvas {
+  user-select: none;
+  touch-action: none;
+}
+
+#canvas canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
 /** side menu **/
 
@@ -102,38 +117,27 @@ menu {
   padding: 0px;
 }
 
-/*
-#layersMenu > details{
+#layersMenu details {
+  position: relative;
+  overflow: visible;
+}
+
+#layersMenu details menu {
   position: absolute;
-  top:0;
-  left:0;
-  padding: 5px;
+  z-index: 500;
+  max-width: 100vw;
+  max-height: 100vh;
 }
 
-#layersMenu > details > summary {
-  list-style: none;
-}
 
-#layersMenu > details > menu {
-  background: aliceblue;
-  max-height: 80vh;
-  overflow-y: scroll;
-}
-
-#layersMenu > details[open] > menu {
-  padding: 5px;
-}
-*/
-
-#layersMenu {
-  overflow-x: scroll;
-  background: aliceblue;
-}
-
-#layersMenu > menu{
-  overflow-x: scroll;
+#layersMenu menu {
+  overflow: scroll;
   display: flex;
-  flex-direction: row;
+  background: aliceblue;
+  border: 1px inset grey;
+  padding: 5px;
+  margin-top: 5px;
+
 }
 
 #layersMenu li {
@@ -142,7 +146,18 @@ menu {
   display: inline-block;
 }
 
-/** Hidden stuff for dom manip **/
-#hidden {
-  display: none;
+@media all and (orientation:portrait) {
+
+  /* Style adjustments for portrait mode goes here */
+  #layersMenu menu {
+    flex-direction: row;
+  }
+}
+
+@media all and (orientation:landscape) {
+
+  /* Style adjustments for portrait mode goes here */
+  #layersMenu menu {
+    flex-direction: column;
+  }
 }

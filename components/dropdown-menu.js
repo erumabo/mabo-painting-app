@@ -16,7 +16,6 @@ export class DropdownMenu extends HTMLElement {
     //this.addEventListener("focus", ()=>{});
     this.addEventListener("focusout", () => {
       setTimeout(() => {
-        console.log("close")
         if(document.activeElement?.closest("dropdown-menu") == self)
           return
         shadow.querySelector("#menu").open = undefined;
@@ -43,17 +42,22 @@ export class DropdownMenu extends HTMLElement {
   
   content = `
   <style>
+    @import "./material-icons.css";
+    @import "./style/theme.css";
     details {
       position: relative;
-      --max-width: 100px;
     }
     #body {
       position: absolute;
       z-index: 500;
+      background: white;
+      border: 1px inset grey;
+      padding: 5px;
+      margin-top: 5px;
     }
   </style>
   <details id="menu">
-    <summary id="name">Summary</summary>
+    <summary id="name" class="button primary">Summary</summary>
     <div id="body">
       <slot></slot>
     </div>

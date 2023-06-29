@@ -2,7 +2,7 @@
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 1rem;  /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -10,6 +10,8 @@
   word-wrap: normal;
   white-space: nowrap;
   direction: ltr;
+  --text-align: bottom;
+  vertical-align: bottom;
 
   /* Support for all WebKit browsers. */
   -webkit-font-smoothing: antialiased;
