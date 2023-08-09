@@ -30,8 +30,19 @@ tailored to my needs.
 
 
 ### Way latter down the road
+
 - Edit history
 - Select, copy, cut and paste
 - Move layers independently
 - Layers of diff size
+- 
+
+
+## Credits and Libs used
+
+- [Iro.js](https://iro.js.org/guide.html)
+- [Contact.js]()
+- [JZip.js]()
+- [Sortable.js](https://sortablejs.github.io/Sortable/)
+- [Material Icons](https://fonts.google.com/icons?icon.style=Filled&icon.set=Material+Icons)
 - 

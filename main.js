@@ -14,7 +14,8 @@ let image = null,
     canvasWrap = null,
     canvas = null,
     activeLayer = null,
-    zoom = null;
+    zoom = null,
+    originalZoom = null;
 
 canvasWrap = document.getElementById("canvas");
 canvas = document.createElement("canvas");
@@ -42,6 +43,8 @@ function createImage(width, height) {
   zoom.scale = Math.min(
     canvas.width / zoom.width,
     canvas.height / zoom.height);
+  
+  originalZoom = zoom;
   
   onZoom(zoom.scale, {
     x: image.width / 2,
@@ -319,9 +322,13 @@ const coords = {
     //m_x = m_x + x/s - 0.5*viewSize_x/s
     //m_y = m_y + y/s - 0.5*viewSize_y/s
     return {
-      x: origin.x + s.x / s2 - 0.5*zoom.width/s2,
-      y: origin.y + s.y / s2 - 0.5*zoom.height/s2
+      x: origin.x + s.x / s2 - 0.5 * zoom.width/s2,
+      y: origin.y + s.y / s2 - 0.5 * zoom.height/s2
     }
+    /*return {
+      x: origin.x - s.x / s1 + s.x / s2,
+      y: origin.y - s.y / s1 + s.y / s2
+    }*/
   }
 }
 
@@ -367,8 +374,8 @@ function onZoom(nscale, center) {
   const nsi = 1.0 / nscale;
   let origin = coords.newZoomOrigin(
       center, 
-      zoom.scale, nscale,
-      zoom.origin
+      originalZoom.scale, nscale,
+      originalZoom.origin
     );
   
   zoom = {
@@ -418,16 +425,18 @@ canvas.addEventListener("twofingerpan", (ev) => {
   }
 });
 
-canvas.addEventListener("pinchstart", (ev) => {});
+canvas.addEventListener("pinchstart", (ev) => {
+  originalZoom = zoom;
+});
 
 canvas.addEventListener("pinch", (ev) => {
   const scale = ev.detail.global.scale;
   const p = ev.detail.global.center;
-  onZoom(zoom.scale * scale, p);
+  onZoom(originalZoom.scale * scale, p);
 })
 
 canvas.addEventListener("pinchend", (ev) => {
-  zoom.scale = zoom.scale * ev.detail.global.scale;
+  zoom.scale = originalZoom.scale * ev.detail.global.scale;
   onZoom(zoom.scale, ev.detail.global.center);
 });
 
