@@ -10,52 +10,71 @@
   <!-- Custom Styles -->
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json" />
+  <script type="module" src="components/main-import.js"></script>
 </head>
 
 <body>
   <div id="mainLayout">
 
     <menu id="topMenu">
-            
       <li>
-        <dropdown-menu name="File">
-            <menu id="fileMenu">
-              <li>
-                <input type="file" id="openFile" style="display: none" accept=".zip" />
-                <button id="openButton" class="button primary">Open</button>
-              </li>
-              <li>
-                <button id="saveButton" class="button primary">Save</button>
-              </li>
-              <li>
-                <button id="exportButton" class="button primary">Export&nbsp;as&nbsp;PNG</button>
-              </li>
-            </menu>
-        </dropdown-menu>
+        <modal-menu name="File" id="fileMenu">
+          <menu>
+            <li>
+              <input type="file" id="openFile" style="display: none" accept=".zip" >
+              <button id="openButton" class="button primary">Open</button>
+            </li>
+            <li>
+              <button id="saveButton" class="button primary">Save</button>
+            </li>
+            <li>
+              <button id="exportButton" class="button primary">Export&nbsp;as&nbsp;PNG</button>
+            </li>
+          </menu>
+        </modal-menu>
       </li>
-      
+
       <li>
-        <dropdown-menu name="Controls">
-            <menu id="controlsMenu">
-              <li>
-                <label for="inputColorPicker" class="button primary">Pencil Color</label>
-                <input type="color" id="inputColorPicker" value="#000000" />
-              </li>
-              <li>
-                <label for="inputPencilSize" class="button primary">Pencil Size</label>
-                <input type="range" id="inputPencilSize" min="2" value="10" max="50" />
-              </li>
-              <li>
-                <button id="buttonEraser" class="button primary">Borrador</button>
-              </li>
-              <li>
-                <button id="buttonBucket" class="button primary">Bucket Fill</button>
-              </li>
-            </menu>
-        </dropdown-menu>
+        <modal-menu name="Controls">
+          <menu id="controlsMenu">
+            <li>
+              <label for="inputColorPicker" class="button primary">Pencil Color</label>
+              <input type="color" id="inputColorPicker" value="#000000" />
+            </li>
+            <li>
+              <label for="inputPencilSize" class="button primary">Pencil Size</label>
+              <input type="range" id="inputPencilSize" min="2" value="10" max="50" />
+            </li>
+            <li>
+              <button id="buttonEraser" class="button primary">Borrador</button>
+            </li>
+            <li>
+              <button id="buttonBucket" class="button primary">Bucket Fill</button>
+            </li>
+          </menu>
+        </modal-menu>
       </li>
       <li>
-        <button id="buttonToolbarDialog" class="button primary">Toolbar</button>
+        <modal-menu id="dialogToolbar" name="Toolbar">
+          <menu>
+            <label>
+              <input type="radio" name="toolradio" />
+              <span class="material-icons">brush</span>
+              Pencil
+            </label>
+            <label>
+              <input type="radio" name="toolradio" />
+              <span class="material-icons">format_color_fill</span>
+              Bucket
+            </label>
+            <label>
+              <input type="radio" name="toolradio" />
+              <span class="material-icons">panorama_wide_angle_select</span>
+              Eraser
+            </label>
+            <div id="colorPicker"></div>
+          </menu>
+        </modal-menu>
       </li>
     </menu>
 
@@ -64,60 +83,31 @@
     </main>
 
     <aside id="layersMenu">
-      <details>
-        <summary class="button primary">
-          <span class="material-icons">layers</span>Layers
-        </summary>
-        <menu id="layerMenu">
-          <li>
-            <button id="newLayerButton" class="menuButton primary button">
-              <span class="material-icons">add_box</span>Add
-            </button>
-          </li>
-        </menu>
-      </details>
+      <span class="material-icons">layers</span> Layers
+      <menu id="layerMenu">
+        <li>
+          <button id="newLayerButton" class="menuButton primary button">
+            <span class="material-icons">add_box</span>Add
+          </button>
+        </li>
+      </menu>
     </aside>
 
   </div>
-  
+
   <dialog id="dialogNewImage">
     <form method="dialog">
-      
       <button>Close</button>
     </form>
   </dialog>
-  
-  
-  <dialog id="dialogToolbar" class="modal">
-    <form method="dialog">
-      <fieldset>
-        <label>
-          <input type="radio" name="toolradio"/>
-          <span class="material-icons">brush</span>
-          Pencil
-        </label>
-        <label>
-          <input type="radio" name="toolradio"/>
-          <span class="material-icons">format_color_fill</span>
-          Bucket
-        </label>
-        <label>
-          <input type="radio" name="toolradio"/>
-          <span class="material-icons">panorama_wide_angle_select</span>
-          Eraser
-        </label>
-      </fieldset>
-      
-      <div id="colorPicker"></div>
-      
-      <button>Close</button>
-    </form>
-  </dialog>
+
+
+
 
   <template id="layerControl">
 
   </template>
-  
+
   <script type="module" src="main.js"></script>
 </body>
 

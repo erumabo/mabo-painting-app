@@ -88,7 +88,7 @@ class LayerControl extends HTMLElement {
         grid-template-areas:
           "image toggle"
           "image delete"
-          "select select";
+          "image select";
         column-gap: 2px;
         row-gap: 2px;
         padding: 4px;

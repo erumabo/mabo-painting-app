@@ -1,7 +1,8 @@
 if("serviceWorker"in navigator){navigator.serviceWorker.register("./src/sw.js")}
 
 import './libs/jszip.min.js';
-import './components/dropdown-menu.js';
+//import './components/dropdown-menu.js';
+import './components/modal-menu.js';
 import './components/layer-control.js';
 import { Pan, TwoFingerPan, Pinch, PointerListener, Tap } from './libs/contact.js';
 import iro from "./libs/iro.es.js";
@@ -193,19 +194,10 @@ document.getElementById("buttonBucket")
 
 const colorPicker = new iro.ColorPicker("#colorPicker");
 
-const dialogToolbar = document.getElementById("dialogToolbar");
-document.getElementById("buttonToolbarDialog")
-  .addEventListener("click", (ev) => {
-    dialogToolbar.showModal();
-  })
-
-dialogToolbar
-  .addEventListener("click", (ev) => {
-    if(ev.target === dialogToolbar)
-      dialogToolbar.close();
-  })
 //=================================================
 
+//=================================================
+  
 function exportImage() {
   let link = document.createElement('a');
   link.download = 'file' + Date.now() + '.png';
@@ -489,3 +481,5 @@ requestAnimationFrame(updateLayer);
 createImage(300,300);
 
 //=================================================
+
+
