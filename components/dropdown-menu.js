@@ -1,4 +1,4 @@
-export class DropdownMenu extends HTMLElement {
+class DropdownMenu extends HTMLElement {
   static get observedAttributes() {
     return ["name"];
   }

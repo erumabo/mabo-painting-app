@@ -1,4 +1,4 @@
-export class ModalMenu extends HTMLElement {
+class ModalMenu extends HTMLElement {
   static get observedAttributes() {
     return ["name"];
   }

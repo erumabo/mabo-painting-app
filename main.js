@@ -2,21 +2,18 @@ if("serviceWorker"in navigator){navigator.serviceWorker.register("./src/sw.js")}
 
 import './libs/jszip.min.js';
 //import './components/dropdown-menu.js';
-import './components/modal-menu.js';
-import './components/layer-control.js';
+//import './components/modal-menu.js';
+//import './components/layer-control.js';
 import { Pan, TwoFingerPan, Pinch, PointerListener, Tap } from './libs/contact.js';
 import iro from "./libs/iro.es.js";
 import { Layer } from './src/layer.js';
-import { Image } from './src/image.js';
+import { Project } from './src/project.js';
 
 //=================================================
 
-let image = null,
+let project = null,
     canvasWrap = null,
-    canvas = null,
-    activeLayer = null,
-    zoom = null,
-    originalZoom = null;
+    canvas = null;
 
 canvasWrap = document.getElementById("canvas");
 canvas = document.createElement("canvas");
@@ -25,31 +22,33 @@ canvas.height = canvasWrap.offsetHeight;
 canvas.width = canvasWrap.offsetWidth;
 
 function createImage(width, height) {
-  image = new Image(width, height);
+  project = new Project(width, height);
   
-  zoom = {
+  project.zoom = {
     center: {
-      x: image.width / 2.0,
-      y: image.height / 2.0
+      x: project.width / 2.0,
+      y: project.height / 2.0
     },
     origin: {
       x: 0,
       y: 0
     },
     scale: 1.0,
-    width: image.width,
-    height: image.height,
+    width: project.width,
+    height: project.height,
   }
   
-  zoom.scale = Math.min(
-    canvas.width / zoom.width,
-    canvas.height / zoom.height);
+  project.zoom.scale = Math.min(
+    canvas.width / project.zoom.width,
+    canvas.height / project.zoom.height);
   
-  originalZoom = zoom;
+  project.originalZoom = {
+    ...project.zoom
+  };
   
-  onZoom(zoom.scale, {
-    x: image.width / 2,
-    y: image.height / 2
+  onZoom(project.zoom.scale, {
+    x: project.width / 2,
+    y: project.height / 2
   });
 }
 
@@ -65,7 +64,7 @@ window.addEventListener('resize', _ =>
 //=================================================
 
 function addLayer() {
-  let index = image.layers.length;
+  let index = project.image.layers.length;
 
   let layerButton = document.createElement('layer-control');
   layerButton.setAttribute("layer-id", index);
@@ -81,28 +80,33 @@ function addLayer() {
     .getElementById("layerMenu")
     .appendChild(li)
 
-  let layer = new Layer(image.width, image.height, index, layerButton);
-  image.layers.push(layer);
+  let layer = new Layer(  
+    project.image.width, 
+    project.image.height,
+    index, 
+    layerButton);
+  project.image.layers.push(layer);
   
   activateLayer(index);
   genThumbnail(layer);
 }
 
 function activateLayer(l) {
-  image.activeLayerIndex = l;
-  activeLayer = image.layers[l];
+  project.image.activeLayerIndex = l;
+  project.activeLayer = project.image.layers[l];
   setLayerStyle();
 }
 
 function setLayerStyle() {
-  let ctx = activeLayer.canvas.getContext("2d");
+  let ctx = project.activeLayer.canvas.getContext("2d");
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
-  ctx.lineWidth = image.lineWidth;
-  ctx.strokeStyle = image.strokeStyle;
-  ctx.globalCompositeOperation = image.globalCompositeOperation;
+  ctx.lineWidth = project.image.lineWidth;
+  ctx.strokeStyle = project.image.strokeStyle;
+  ctx.globalCompositeOperation = project.image.globalCompositeOperation;
 }
 
+/////// !!!!!!!! UI STUFF UI STUFF UI STUFF 
 document.getElementById("newLayerButton")
   .addEventListener("click", addLayer);
 
@@ -110,21 +114,21 @@ document.getElementById("newLayerButton")
 
 document.getElementById("inputColorPicker")
   .addEventListener("change", (ev) => {
-    image.globalCompositeOperation = "source-over";
-    image.strokeStyle = ev.target.value
-    if (activeLayer) setLayerStyle();
+    project.image.globalCompositeOperation = "source-over";
+    project.image.strokeStyle = ev.target.value
+    if (project.activeLayer) setLayerStyle();
   });
 
 document.getElementById("inputPencilSize")
   .addEventListener("change", (ev) => {
-    image.lineWidth = ev.target.value
-    if (activeLayer) setLayerStyle();
+    project.image.lineWidth = ev.target.value
+    if (project.activeLayer) setLayerStyle();
   });
 
 document.getElementById("buttonEraser")
   .addEventListener("click", (ev) => {
-    image.globalCompositeOperation = "destination-out";
-    if (activeLayer) setLayerStyle();
+    project.image.globalCompositeOperation = "destination-out";
+    if (project.activeLayer) setLayerStyle();
   })
 
 function getPixel(pixelData, x, y) {
@@ -137,7 +141,7 @@ function getPixel(pixelData, x, y) {
 
 function bucketFill(ox,oy) {
   let {x,y} = zoomedCoords(ox, oy);
-  const ctx = activeLayer.canvas.getContext("2d");
+  const ctx = project.activeLayer.canvas.getContext("2d");
   
   // read the pixels in the canvas
   const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -152,7 +156,7 @@ function bucketFill(ox,oy) {
   
   // get the color we're filling
   const targetColor = getPixel(pixelData, x, y);
-  let fillHex = 'ff' + image.strokeStyle
+  let fillHex = 'ff' + project.image.strokeStyle
     .replace("#", '')
     .match(/.{1,2}/g)
     .reverse()
@@ -185,10 +189,10 @@ function bucketFill(ox,oy) {
   
 document.getElementById("buttonBucket")
   .addEventListener("click", (ev) => {
-    image.globalCompositeOperation = "source-over";
-    if (activeLayer) {
+    project.image.globalCompositeOperation = "source-over";
+    if (project.activeLayer) {
       setLayerStyle();
-      image.bucketFill = true;
+      project.image.bucketFill = true;
     }
   })
 
@@ -209,7 +213,7 @@ document.getElementById("exportButton").addEventListener("click", exportImage);
 //=================================================
 
 async function saveFile() {
-  let imageData = await image.toJSON();
+  let imageData = await project.image.toJSON();
   let layerBlob = imageData.blobs;
   imageData.blobs = undefined;
   
@@ -265,14 +269,15 @@ async function openFile(file) {
     layer.control.setAttribute("src", snap);
   }
   
-  image = new Image(fimage.width, fimage.height);
-  image.layers = layers;
-  image.activeLayerIndex = fimage.activeLayerIndex;
-  image.lineWidth = fimage.lineWidth;
-  image.strokeStyle = fimage.strokeStyle;
-  image.globalCompositeOperation = fimage.globalCompositeOperation;
+  project = new Project(fimage.width, fimage.height);
+  //image = new Image(fimage.width, fimage.height);
+  project.image.layers = layers;
+  project.image.activeLayerIndex = fimage.activeLayerIndex;
+  project.image.lineWidth = fimage.lineWidth;
+  project.image.strokeStyle = fimage.strokeStyle;
+  project.image.globalCompositeOperation = fimage.globalCompositeOperation;
   
-  activateLayer(image.activeLayerIndex);
+  activateLayer(project.image.activeLayerIndex);
 }
 
 document.getElementById("openFile").addEventListener("change", (ev) => {
@@ -288,34 +293,34 @@ document.getElementById("openButton").addEventListener("click", () => {
 const coords = {
   zoomToScreen({x, y}){ 
     return {
-      x: x * zoom.scale,
-      y: y * zoom.scale
+      x: x * project.zoom.scale,
+      y: y * project.zoom.scale
     }
   },
   screenToZoom({x, y}) {
     return {
-      x: x / zoom.scale,
-      y: y / zoom.scale
+      x: x / project.zoom.scale,
+      y: y / project.zoom.scale
     }
   },
   zoomedToImage({x, y}) {
     return {
-      x: x + zoom.origin.x,
-      y: y + zoom.origin.y
+      x: x + project.zoom.origin.x,
+      y: y + project.zoom.origin.y
     }
   },
   imageToZoomed({x,y}) {
     return {
-      x: x - zoom.origin.x,
-      y: y - zoom.origin.y
+      x: x - project.zoom.origin.x,
+      y: y - project.zoom.origin.y
     }
   },
   newZoomOrigin(s, s1, s2, origin) {
     //m_x = m_x + x/s - 0.5*viewSize_x/s
     //m_y = m_y + y/s - 0.5*viewSize_y/s
     return {
-      x: origin.x + s.x / s2 - 0.5 * zoom.width/s2,
-      y: origin.y + s.y / s2 - 0.5 * zoom.height/s2
+      x: origin.x + s.x / s2 - 0.5 * project.zoom.width/s2,
+      y: origin.y + s.y / s2 - 0.5 * project.zoom.height/s2
     }
     /*return {
       x: origin.x - s.x / s1 + s.x / s2,
@@ -330,23 +335,23 @@ function zoomedCoords(x, y) {
 }
 
 function canvasTap(ev) {
-  if (!activeLayer) return;
-  let ctx = activeLayer.canvas.getContext("2d");
-  if(image.bucketFill) {
-    image.bucketFill = false;
+  if (!project.activeLayer) return;
+  let ctx = project.activeLayer.canvas.getContext("2d");
+  if(project.image.bucketFill) {
+    project.image.bucketFill = false;
     bucketFill(ev.offsetX, ev.offsetY);
   }
 }
 
 function dragStart(ev) {
-  if (!activeLayer) return;
-  let ctx = activeLayer.canvas.getContext("2d");
+  if (!project.activeLayer) return;
+  let ctx = project.activeLayer.canvas.getContext("2d");
   ctx.beginPath();
 }
 
 function drag(ev) {
-  if (!activeLayer) return;
-  let ctx = activeLayer.canvas.getContext("2d");
+  if (!project.activeLayer) return;
+  let ctx = project.activeLayer.canvas.getContext("2d");
   let {x,y} = zoomedCoords(ev.offsetX, ev.offsetY);
   ctx.lineTo(x, y);
   ctx.stroke();
@@ -362,21 +367,21 @@ function onZoom(nscale, center) {
     }
   }
   
-  const si = 1.0 / zoom.scale;
+  const si = 1.0 / project.zoom.scale;
   const nsi = 1.0 / nscale;
   let origin = coords.newZoomOrigin(
       center, 
-      originalZoom.scale, nscale,
-      originalZoom.origin
+      project.originalZoom.scale, nscale,
+      project.originalZoom.origin
     );
   
-  zoom = {
+  project.zoom = {
     center,
     origin: {
-      x: (origin.x + zoom.origin.x) / 2,
-      y: (origin.y + zoom.origin.y) / 2
+      x: (origin.x + project.zoom.origin.x) / 2,
+      y: (origin.y + project.zoom.origin.y) / 2
     },
-    scale: zoom.scale,
+    scale: project.zoom.scale,
     width: canvas.width * nsi,
     height: canvas.height * nsi
   }
@@ -404,46 +409,48 @@ canvas.addEventListener("pan", (ev) => {
 
 canvas.addEventListener("twofingerpan", (ev) => {
   const p = ev.detail.live;
-  if(zoom.scale > 1) {
-    onZoom(zoom.scale, {
-      x: zoom.center.x - (p.deltaX / (zoom.scale * zoom.scale)),
-      y: zoom.center.y - (p.deltaY / (zoom.scale * zoom.scale))
+  if(project.zoom.scale > 1) {
+    onZoom(project.zoom.scale, {
+      x: project.zoom.center.x - (p.deltaX / (project.zoom.scale * project.zoom.scale)),
+      y: project.zoom.center.y - (p.deltaY / (project.zoom.scale * project.zoom.scale))
     });
   } else {
-    onZoom(zoom.scale, {
-      x: zoom.center.x + (p.deltaX * (zoom.scale * zoom.scale)),
-      y: zoom.center.y + (p.deltaY * (zoom.scale * zoom.scale))
+    onZoom(project.zoom.scale, {
+      x: project.zoom.center.x + (p.deltaX * (project.zoom.scale * project.zoom.scale)),
+      y: project.zoom.center.y + (p.deltaY * (project.zoom.scale * project.zoom.scale))
     });
   }
 });
 
 canvas.addEventListener("pinchstart", (ev) => {
-  originalZoom = zoom;
+  project.originalZoom = {
+    ...project.zoom
+  };
 });
 
 canvas.addEventListener("pinch", (ev) => {
   const scale = ev.detail.global.scale;
   const p = ev.detail.global.center;
-  onZoom(originalZoom.scale * scale, p);
+  onZoom(project.originalZoom.scale * scale, p);
 })
 
 canvas.addEventListener("pinchend", (ev) => {
-  zoom.scale = originalZoom.scale * ev.detail.global.scale;
-  onZoom(zoom.scale, ev.detail.global.center);
+  project.zoom.scale = project.originalZoom.scale * ev.detail.global.scale;
+  onZoom(project.zoom.scale, ev.detail.global.center);
 });
 
 
 //=================================================
 
 function collapseLayers(canvas, zoom) {
-  if(!image) return;
+  if(!project.image) return;
   let ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.imageSmoothingQuality = "high";
   //ctx.imageSmoothingEnabled = false;
   
-  for (let layer of image.layers) {
+  for (let layer of project.image.layers) {
     if(layer.visible) {
       ctx.globalCompositeOperation = layer.globalCompositeOperation;
       ctx.drawImage(
@@ -469,9 +476,9 @@ function genThumbnail(layer) {
 }
 
 function updateLayer() {
-  collapseLayers(canvas, zoom);
-  if (activeLayer)
-    genThumbnail(activeLayer).then(() =>
+  collapseLayers(canvas, project.zoom);
+  if (project.activeLayer)
+    genThumbnail(project.activeLayer).then(() =>
       requestAnimationFrame(updateLayer));
   else 
     requestAnimationFrame(updateLayer);
